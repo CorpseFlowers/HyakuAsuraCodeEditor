@@ -2,53 +2,420 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hyaku Asura</title>
+<style>
+  :root{
+    --cream:#F7F4ED;
+    --cream-deep:#EFEAE0;
+    --ink:#2B2725;
+    --ink-soft:#6B6259;
+    --terracotta:#C2622E;
+    --terracotta-deep:#A24F22;
+    --line:#E1D9CB;
+    --good:#5F7A52;
+    --bad:#B3452E;
+    --card-shadow: 0 1px 2px rgba(43,39,37,.04), 0 6px 16px rgba(43,39,37,.05);
+    --radius: 14px;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family: "Iowan Old Style","Source Serif Pro", Georgia, "Noto Serif Thai", serif;
+    line-height:1.5;
+    padding:48px 24px 96px;
+    min-height:100vh;
+  }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    animation: rise .5s cubic-bezier(.16,1,.3,1);
+  }
+
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ---- header ---- */
+  .eyebrow{
+    font-family: "Inter", -apple-system, system-ui, sans-serif;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--terracotta-deep);
+    font-weight:600;
+    margin:0 0 6px;
+  }
+  h1{
+    font-size:34px;
+    margin:0 0 6px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    font-family:"Inter", system-ui, sans-serif;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin:0 0 28px;
+  }
+
+  /* ---- key card ---- */
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--card-shadow);
+    padding:20px 22px;
+    margin-bottom:20px;
+    transition: box-shadow .25s ease, transform .25s ease;
+  }
+
+  .keyrow{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  label.fieldlabel{
+    font-family:"Inter", system-ui, sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    font-weight:600;
+    white-space:nowrap;
+  }
+
+  input[type="password"]{
+    flex:1;
+    min-width:160px;
+    font-family:"SF Mono", "Menlo", monospace;
+    font-size:13px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--cream);
+    color:var(--ink);
+    outline:none;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  input[type="password"]:focus{
+    border-color:var(--terracotta);
+    background:#fff;
+  }
+
+  /* ---- buttons ---- */
+  button{
+    font-family:"Inter", system-ui, sans-serif;
+    font-size:13px;
+    font-weight:600;
+    padding:10px 16px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    cursor:pointer;
+    transition: transform .15s cubic-bezier(.2,.8,.4,1), box-shadow .15s ease, background .15s ease, border-color .15s ease;
+  }
+  button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 4px 10px rgba(43,39,37,.08);
+    border-color:#D8CFC0;
+  }
+  button:active{ transform:translateY(0px) scale(.98); }
+
+  button.primary{
+    background:var(--terracotta);
+    border-color:var(--terracotta);
+    color:#fff;
+  }
+  button.primary:hover{
+    background:var(--terracotta-deep);
+    border-color:var(--terracotta-deep);
+  }
+
+  button.ghost{
+    background:transparent;
+    border-color:transparent;
+    color:var(--ink-soft);
+  }
+  button.ghost:hover{
+    background:var(--cream-deep);
+    box-shadow:none;
+    transform:none;
+  }
+
+  button.danger{ color:var(--bad); }
+  button.danger:hover{ border-color:var(--bad); }
+
+  .statusline{
+    font-family:"Inter", system-ui, sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-left:6px;
+    transition: color .2s ease;
+  }
+  .statusline.ok{ color:var(--good); }
+  .statusline.err{ color:var(--bad); }
+
+  /* ---- main panel ---- */
+  #หน้าหลัก{
+    opacity:0;
+    transform:translateY(6px);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  #หน้าหลัก.show{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  h2.section{
+    font-size:13px;
+    font-family:"Inter", system-ui, sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:var(--ink-soft);
+    font-weight:700;
+    margin:32px 0 12px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  h2.section::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  /* ---- table ---- */
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:var(--card-shadow);
+  }
+  thead th{
+    text-align:left;
+    font-family:"Inter", system-ui, sans-serif;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+    background:var(--cream-deep);
+    padding:10px 14px;
+    font-weight:600;
+    border-bottom:1px solid var(--line);
+  }
+  tbody tr{
+    border-bottom:1px solid var(--line);
+    transition: background .15s ease;
+  }
+  tbody tr:last-child{ border-bottom:none; }
+  tbody tr:hover{ background: #FCFAF6; }
+  tbody td{
+    padding:11px 14px;
+    font-size:13.5px;
+    vertical-align:middle;
+  }
+  tbody td strong{ font-weight:600; }
+  tbody td.mono{
+    font-family:"SF Mono","Menlo",monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+  tbody td.actions{
+    display:flex;
+    gap:6px;
+    white-space:nowrap;
+  }
+  tbody td.actions button{
+    padding:6px 11px;
+    font-size:12px;
+  }
+  .empty-row{
+    text-align:center;
+    padding:28px;
+    color:var(--ink-soft);
+    font-family:"Inter", system-ui, sans-serif;
+    font-size:13px;
+  }
+
+  /* ---- add box / edit box ---- */
+  .panelbox{
+    margin-top:14px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--card-shadow);
+    padding:18px 20px;
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition: max-height .35s cubic-bezier(.16,1,.3,1), opacity .3s ease, padding .35s ease, margin .35s ease;
+  }
+  .panelbox.open{
+    max-height:560px;
+    opacity:1;
+  }
+  .panelbox.closed{
+    max-height:0;
+    opacity:0;
+    padding-top:0;
+    padding-bottom:0;
+    margin-top:0;
+    border-width:0;
+  }
+
+  .panelbox p.lead{
+    font-family:"Inter", system-ui, sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0 0 8px;
+    font-weight:600;
+  }
+
+  input#ชื่อใหม่{
+    width:100%;
+    font-family:"Inter", system-ui, sans-serif;
+    font-size:14px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--cream);
+    outline:none;
+    transition: border-color .2s ease, background .2s ease;
+    margin-bottom:14px;
+  }
+  input#ชื่อใหม่:focus{ border-color:var(--terracotta); background:#fff; }
+
+  textarea{
+    width:100%;
+    font-family:"SF Mono","Menlo",monospace;
+    font-size:12.5px;
+    line-height:1.6;
+    padding:14px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--cream);
+    color:var(--ink);
+    outline:none;
+    resize:vertical;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  textarea:focus{ border-color:var(--terracotta); background:#fff; }
+
+  .actions-row{
+    margin-top:12px;
+    display:flex;
+    gap:8px;
+  }
+
+  /* edit-row floating card */
+  #กล่องแก้ไขแถว{
+    margin-top:28px;
+    background:#fff;
+    border:1px solid var(--terracotta);
+    border-radius:var(--radius);
+    box-shadow:0 4px 20px rgba(194,98,46,.12);
+    padding:18px 20px;
+    transform:scale(.98) translateY(6px);
+    opacity:0;
+    transition: transform .25s cubic-bezier(.2,.8,.3,1), opacity .25s ease;
+  }
+  #กล่องแก้ไขแถว.show{
+    transform:scale(1) translateY(0);
+    opacity:1;
+  }
+  #กล่องแก้ไขแถว p{
+    font-family:"Inter", system-ui, sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+  }
+  #ชื่อแก้ไข{
+    color:var(--terracotta-deep);
+    font-family:"SF Mono","Menlo",monospace;
+    font-size:13px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+
+  @media (max-width:560px){
+    body{ padding:28px 16px 80px; }
+    h1{ font-size:27px; }
+    .keyrow{ flex-direction:column; align-items:stretch; }
+  }
+</style>
 </head>
 <body>
 
-<h2>โค้ด Hyaku Asura</h2>
-<h3>อย่ากดเล่นเยอะเดี๋ยว api request ผมหมด</h3>
+<div class="wrap">
 
-<label>Master Key: <input type="password" id="apiKey" placeholder="fuck eevee..."></label><br><br>
+  <p class="eyebrow">ระบบจัดการข้อมูล</p>
+  <h1>โค้ด Hyaku Asura</h1>
+  <p class="sub">อย่ากดเล่นเยอะ เดี๋ยว API request ผมหมด</p>
 
-<button onclick="โหลด()">โหลด</button>
-<button onclick="บันทึก()">เซฟ</button>
-<span id="สถานะ"></span>
-
-<br><br>
-<div id="หน้าหลัก" style="display:none">
-
-  <h3>ทั้งหมด</h3>
-  <table border="1" cellpadding="6" cellspacing="0" id="ตาราง">
-    <thead><tr><th>ชื่อ</th><th>ข้อมูล</th><th>จัดการ</th></tr></thead>
-    <tbody id="แถว"></tbody>
-  </table>
-
-  <br>
-  <button onclick="สลับเพิ่ม()">+ เพิ่ม</button>
-
-  <div id="กล่องเพิ่ม" style="display:none;margin-top:10px">
-    <label>ชื่อ: <input id="ชื่อใหม่" placeholder="เช่น NewEvent"></label><br><br>
-    <p>แก้ไข:</p>
-    <textarea id="แก้ไขโคลน" rows="12" cols="60" oninput="ตรวจJSON('แก้ไขโคลน','สถานะโคลน')"></textarea>
-    <br><span id="สถานะโคลน"></span><br>
-    <button onclick="ยืนยันเพิ่ม()">ยืนยัน</button>
-    <button onclick="รีเซ็ตโคลน()">รีเซ็ต</button>
+  <div class="card">
+    <div class="keyrow">
+      <label class="fieldlabel" for="apiKey">Master Key</label>
+      <input type="password" id="apiKey" placeholder="•••• ใส่กุญแจของคุณ">
+      <button class="primary" onclick="โหลด()">โหลด</button>
+      <button onclick="บันทึก()">เซฟ</button>
+    </div>
+    <div id="สถานะ" class="statusline"></div>
   </div>
 
-  <br><br>
-  <h3>Raw JSON</h3>
-  <textarea id="JSONดิบ" rows="15" cols="60" oninput="ตรวจJSON('JSONดิบ','สถานะดิบ')"></textarea>
-  <br><span id="สถานะดิบ"></span>
+  <div id="หน้าหลัก">
 
-</div>
+    <h2 class="section">ทั้งหมด</h2>
+    <table id="ตาราง">
+      <thead><tr><th>ชื่อ</th><th>ข้อมูล</th><th>จัดการ</th></tr></thead>
+      <tbody id="แถว"></tbody>
+    </table>
 
-<div id="กล่องแก้ไขแถว" style="display:none;margin-top:10px;border:1px solid #aaa;padding:10px">
-  <p>กำลังแก้ไข: <strong id="ชื่อแก้ไข"></strong></p>
-  <textarea id="แก้ไขแถว" rows="10" cols="60" oninput="ตรวจJSON('แก้ไขแถว','สถานะแก้ไขแถว')"></textarea>
-  <br><span id="สถานะแก้ไขแถว"></span><br>
-  <button onclick="ยืนยันแก้ไข()">ยืนยัน</button>
-  <button onclick="ยกเลิกแก้ไข()">ยกเลิก</button>
+    <div class="actions-row">
+      <button class="primary" onclick="สลับเพิ่ม()" id="ปุ่มเพิ่ม">+ เพิ่มรายการ</button>
+    </div>
+
+    <div id="กล่องเพิ่ม" class="panelbox closed">
+      <p class="lead">ชื่อรายการ</p>
+      <input id="ชื่อใหม่" placeholder="เช่น NewEvent">
+      <p class="lead">แก้ไขข้อมูล (JSON)</p>
+      <textarea id="แก้ไขโคลน" rows="10" oninput="ตรวจJSON('แก้ไขโคลน','สถานะโคลน')"></textarea>
+      <div id="สถานะโคลน" class="statusline"></div>
+      <div class="actions-row">
+        <button class="primary" onclick="ยืนยันเพิ่ม()">ยืนยัน</button>
+        <button class="ghost" onclick="รีเซ็ตโคลน()">รีเซ็ต</button>
+      </div>
+    </div>
+
+    <h2 class="section">Raw JSON</h2>
+    <textarea id="JSONดิบ" rows="14" oninput="ตรวจJSON('JSONดิบ','สถานะดิบ')"></textarea>
+    <div id="สถานะดิบ" class="statusline"></div>
+
+  </div>
+
+  <div id="กล่องแก้ไขแถว">
+    <p>กำลังแก้ไข <span id="ชื่อแก้ไข"></span></p>
+    <textarea id="แก้ไขแถว" rows="10" oninput="ตรวจJSON('แก้ไขแถว','สถานะแก้ไขแถว')"></textarea>
+    <div id="สถานะแก้ไขแถว" class="statusline"></div>
+    <div class="actions-row">
+      <button class="primary" onclick="ยืนยันแก้ไข()">ยืนยัน</button>
+      <button class="ghost" onclick="ยกเลิกแก้ไข()">ยกเลิก</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -59,24 +426,31 @@ let เพิ่มเปิดอยู่ = false;
 
 function getKey() { return document.getElementById('apiKey').value.trim(); }
 
+function setสถานะ(elId, text, kind) {
+  const el = document.getElementById(elId);
+  el.textContent = text;
+  el.classList.remove('ok','err');
+  if (kind) el.classList.add(kind);
+}
+
 function ตรวจJSON(editorId, statusId) {
-  try { JSON.parse(document.getElementById(editorId).value); document.getElementById(statusId).textContent = "✓ JSON ถูกต้อง"; }
-  catch(e) { document.getElementById(statusId).textContent = "✗ ผิดพลาด: " + e.message; }
+  try { JSON.parse(document.getElementById(editorId).value); setสถานะ(statusId, "✓ JSON ถูกต้อง", "ok"); }
+  catch(e) { setสถานะ(statusId, "✗ ผิดพลาด: " + e.message, "err"); }
 }
 
 async function โหลด() {
   const key = getKey();
   if (!key) { alert("กรุณาใส่รหัส API"); return; }
-  document.getElementById('สถานะ').textContent = "กำลังโหลด…";
+  setสถานะ('สถานะ', "กำลังโหลด…", null);
   try {
     const r = await fetch("https://api.jsonbin.io/v3/b/" + BIN_ID + "/latest", { headers: { "X-Master-Key": key } });
     if (!r.ok) throw new Error("HTTP " + r.status);
     ข้อมูล = (await r.json()).record;
-    document.getElementById('สถานะ').textContent = "✓ โหลดสำเร็จ";
+    setสถานะ('สถานะ', "✓ โหลดสำเร็จ", "ok");
     อัปเดตตาราง();
     อัปเดตดิบ();
-    document.getElementById('หน้าหลัก').style.display = '';
-  } catch(e) { document.getElementById('สถานะ').textContent = "✗ ผิดพลาด: " + e.message; }
+    document.getElementById('หน้าหลัก').classList.add('show');
+  } catch(e) { setสถานะ('สถานะ', "✗ ผิดพลาด: " + e.message, "err"); }
 }
 
 async function บันทึก() {
@@ -85,7 +459,7 @@ async function บันทึก() {
   let toSave = ข้อมูล;
   const rawVal = document.getElementById('JSONดิบ').value;
   try { toSave = JSON.parse(rawVal); } catch { alert("JSON ดิบผิดพลาด กรุณาแก้ไขก่อนบันทึก"); return; }
-  document.getElementById('สถานะ').textContent = "กำลังบันทึก…";
+  setสถานะ('สถานะ', "กำลังบันทึก…", null);
   try {
     const r = await fetch("https://api.jsonbin.io/v3/b/" + BIN_ID, {
       method: "PUT",
@@ -94,22 +468,24 @@ async function บันทึก() {
     });
     if (!r.ok) throw new Error("HTTP " + r.status);
     ข้อมูล = toSave;
-    document.getElementById('สถานะ').textContent = "✓ บันทึกสำเร็จ";
+    setสถานะ('สถานะ', "✓ บันทึกสำเร็จ", "ok");
     อัปเดตตาราง();
-  } catch(e) { document.getElementById('สถานะ').textContent = "✗ บันทึกไม่สำเร็จ: " + e.message; }
+  } catch(e) { setสถานะ('สถานะ', "✗ บันทึกไม่สำเร็จ: " + e.message, "err"); }
 }
 
 function อัปเดตตาราง() {
   const tbody = document.getElementById('แถว');
-  if (!ข้อมูล || typeof ข้อมูล !== 'object') { tbody.innerHTML = '<tr><td colspan="3">ไม่มีข้อมูล</td></tr>'; return; }
-  tbody.innerHTML = Object.entries(ข้อมูล).map(([k, v]) => {
+  if (!ข้อมูล || typeof ข้อมูล !== 'object') { tbody.innerHTML = '<tr><td colspan="3" class="empty-row">ไม่มีข้อมูล — กดโหลดก่อน</td></tr>'; return; }
+  const entries = Object.entries(ข้อมูล);
+  if (entries.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="empty-row">ยังไม่มีรายการ — กด “+ เพิ่มรายการ”</td></tr>'; return; }
+  tbody.innerHTML = entries.map(([k, v]) => {
     const preview = JSON.stringify(v).slice(0, 60) + (JSON.stringify(v).length > 60 ? '…' : '');
     return `<tr>
       <td><strong>${esc(k)}</strong></td>
-      <td style="font-family:monospace;font-size:12px">${esc(preview)}</td>
-      <td>
+      <td class="mono">${esc(preview)}</td>
+      <td class="actions">
         <button onclick="เปิดแก้ไข('${escAttr(k)}')">แก้ไข</button>
-        <button onclick="ลบ('${escAttr(k)}')">ลบ</button>
+        <button class="danger" onclick="ลบ('${escAttr(k)}')">ลบ</button>
       </td>
     </tr>`;
   }).join('');
@@ -123,9 +499,11 @@ function เปิดแก้ไข(k) {
   กำลังแก้ไขคีย์ = k;
   document.getElementById('ชื่อแก้ไข').textContent = k;
   document.getElementById('แก้ไขแถว').value = JSON.stringify(ข้อมูล[k], null, 2);
-  document.getElementById('สถานะแก้ไขแถว').textContent = '';
-  document.getElementById('กล่องแก้ไขแถว').style.display = '';
-  document.getElementById('กล่องแก้ไขแถว').scrollIntoView({ behavior: 'smooth' });
+  setสถานะ('สถานะแก้ไขแถว', '', null);
+  const box = document.getElementById('กล่องแก้ไขแถว');
+  box.style.display = '';
+  requestAnimationFrame(() => box.classList.add('show'));
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function ยืนยันแก้ไข() {
@@ -134,13 +512,14 @@ function ยืนยันแก้ไข() {
     ยกเลิกแก้ไข();
     อัปเดตตาราง();
     อัปเดตดิบ();
-    alert("อัปเดตสำเร็จ (อย่าลืมกด บันทึก)");
   } catch { alert("JSON ผิดพลาด"); }
 }
 
 function ยกเลิกแก้ไข() {
   กำลังแก้ไขคีย์ = null;
-  document.getElementById('กล่องแก้ไขแถว').style.display = 'none';
+  const box = document.getElementById('กล่องแก้ไขแถว');
+  box.classList.remove('show');
+  setTimeout(() => { box.style.display = 'none'; }, 200);
 }
 
 function ลบ(k) {
@@ -152,15 +531,25 @@ function ลบ(k) {
 
 function สลับเพิ่ม() {
   เพิ่มเปิดอยู่ = !เพิ่มเปิดอยู่;
-  document.getElementById('กล่องเพิ่ม').style.display = เพิ่มเปิดอยู่ ? '' : 'none';
-  if (เพิ่มเปิดอยู่) รีเซ็ตโคลน();
+  const box = document.getElementById('กล่องเพิ่ม');
+  const btn = document.getElementById('ปุ่มเพิ่ม');
+  if (เพิ่มเปิดอยู่) {
+    รีเซ็ตโคลน();
+    box.classList.remove('closed');
+    box.classList.add('open');
+    btn.textContent = '− ยกเลิก';
+  } else {
+    box.classList.remove('open');
+    box.classList.add('closed');
+    btn.textContent = '+ เพิ่มรายการ';
+  }
 }
 
 function รีเซ็ตโคลน() {
   const keys = ข้อมูล ? Object.keys(ข้อมูล) : [];
   const tmpl = keys.length > 0 ? JSON.parse(JSON.stringify(ข้อมูล[keys[0]])) : {};
   document.getElementById('แก้ไขโคลน').value = JSON.stringify(tmpl, null, 2);
-  document.getElementById('สถานะโคลน').textContent = '';
+  setสถานะ('สถานะโคลน', '', null);
 }
 
 function ยืนยันเพิ่ม() {
@@ -171,10 +560,12 @@ function ยืนยันเพิ่ม() {
     ข้อมูล[name] = JSON.parse(document.getElementById('แก้ไขโคลน').value);
     document.getElementById('ชื่อใหม่').value = '';
     เพิ่มเปิดอยู่ = false;
-    document.getElementById('กล่องเพิ่ม').style.display = 'none';
+    const box = document.getElementById('กล่องเพิ่ม');
+    box.classList.remove('open');
+    box.classList.add('closed');
+    document.getElementById('ปุ่มเพิ่ม').textContent = '+ เพิ่มรายการ';
     อัปเดตตาราง();
     อัปเดตดิบ();
-    alert('เพิ่ม "' + name + '" สำเร็จ (อย่าลืมกด บันทึก)');
   } catch { alert("JSON ผิดพลาด กรุณาแก้ไขก่อน"); }
 }
 
